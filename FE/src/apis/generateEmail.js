@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8001/api/generate-email-content";
+const API_URL = "https://aiproduct-ymd0.onrender.com/api/generate-email-content";
 
 export const generateEmail = async (data) => {
   try {
