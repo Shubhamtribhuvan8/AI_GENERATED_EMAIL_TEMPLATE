@@ -15,8 +15,59 @@ export default function InputForm({ onSubmit }) {
     tone: "Informative and persuasive",
     productName: "Green Lipped Mussel",
     productDescription: "Natural joint health supplement sourced from New Zealand",
-    testimonial:
-      "The Green Lipped Mussel supplement has significantly reduced my joint pain. I can now enjoy my daily activities without discomfort!",
+    customerTestimonial: "I was in so much pain before I got the Green Lipped Mussel. I don't think my knees would still be working if I didn't have it! I am a customer for life!",
+    testimonials: [
+      {
+        content: "I was in so much pain before I got the Green Lipped Mussel. I don't think my knees would still be working if I didn't have it! I am a customer for life!",
+        author: "Dawn Harrell"
+      },
+      {
+        content: "I've been taking green lipped mussel for a month now. Slowly I can feel my knees allowing me more movement. Prior I couldn't get up without using both hands. Best product! I never want to run out!",
+        author: "Maria Biedermann"
+      },
+      {
+        content: "I've been taking green lipped mussel for a month now. Slowly I can feel my knees allowing me more movement. Prior I couldn't get up without using both hands. Best product! I never want to run out!",
+        author: "Maria Biedermann"
+      }
+    ],
+    productOptions: [
+      {
+        name: "Green Lipped Mussel 30-60-90 Caps",
+        link: "#"
+      },
+      {
+        name: "Green Lipped Mussel 90 caps - Twin Pack Special",
+        link: "#"
+      }
+    ],
+    benefits: [
+      "Reduces joint pain and stiffness",
+      "Improves mobility and flexibility",
+      "Supports healthy cartilage and joint function"
+    ],
+    pricing: [
+      "Starting at $29.99 for 30-60-90 Caps",
+      "Starting at $49.99 for 90 Caps - Twin Pack Special"
+    ],
+    socialProof: [
+      "Trusted by thousands of customers",
+      "100% satisfaction guarantee"
+    ],
+    scarcity: [
+      "Limited time offer",
+      "Only 100 left in stock"
+    ],
+    brandStory: [
+      "Founded by a New Zealand doctor",
+      "100% natural and made in New Zealand"
+    ],
+    footerContent: [
+      "Contact us: support@deepbluehealth.co.nz",
+      "Phone: 1-800-BRAND-SUPPORT",
+      "© ${new Date().getFullYear()} Deep Blue Health. All rights reserved."
+    ],
+    imagePlacement: "Left",
+    colorScheme: "Blue and Green"
   };
 
   const [formData, setFormData] = useState({});
@@ -92,7 +143,7 @@ export default function InputForm({ onSubmit }) {
         </div>
         <div>
           <Label htmlFor="testimonial">Customer Testimonial</Label>
-          <Textarea id="testimonial" name="testimonial" value={formData.testimonial || ''} onChange={handleChange} required />
+          <Textarea id="testimonial" name="testimonial" value={formData.customerTestimonial || ''} onChange={handleChange} required />
         </div>
         <Button type="submit" className="w-full">
           Generate Email Template

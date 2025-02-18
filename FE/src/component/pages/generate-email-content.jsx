@@ -3,6 +3,7 @@
 import { useState } from "react"
 import InputForm from "../ui/InputForm"
 import EmailTemplate from "../ui/EmailTemplate"
+import EmailMarketingTemplate from "../ui/EmailMarketingTemplate"
 import { generateEmail } from "../../apis/generateEmail"
 import Spinner from "../ui/spinner"
 
@@ -35,6 +36,9 @@ export default function GenerateEmailContent() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <InputForm onSubmit={handleFormSubmit} />
           {isLoading ? <Spinner /> : <EmailTemplate emailData={emailData} />}
+          <div>
+            {isLoading ? <Spinner /> : <EmailMarketingTemplate emailData={emailData} />}
+          </div>
         </div>  
       </div>
     </main>

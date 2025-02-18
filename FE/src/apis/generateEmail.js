@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "https://aiproduct-ymd0.onrender.com/api/generate-email-content";
+const API_URL = 'https://aiproduct-ymd0.onrender.com/api/generate-email-content' 
+
+// || "https://aiproduct-ymd0.onrender.com/api/generate-email-content";
 
 export const generateEmail = async (data) => {
   try {

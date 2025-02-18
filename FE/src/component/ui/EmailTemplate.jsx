@@ -1,96 +1,80 @@
 import Image from "./Image"
 
 export default function EmailTemplate({ emailData }) {
-  console.log(emailData, "email data");
   if (!emailData || typeof emailData !== "object") {
     return <div className="text-red-500 text-center">No email data provided.</div>
   }
 
-  const productUrl = emailData.productUrl || "https://www.deepbluehealth.co.nz/";
+  const productUrl = emailData?.productUrl || "https://www.deepbluehealth.co.nz/";
 
-  console.log(emailData.emailContent, "email data");
+  // Parse the email content HTML
+  const emailContentHtml = emailData?.emailContent;
 
-  // Extract subject from email content
-  const subject = emailData.emailContent && typeof emailData.emailContent === "string" && emailData.emailContent.includes("Subject:") 
-    ? emailData.emailContent.split("Subject:")[1].split("\n")[0].trim() 
-    : "No subject";
+  // Parse the email data text content 
+  const emailDataText = emailData?.emailData;
 
-  // Extract body content (everything after the subject line)
-  const bodyContent = typeof emailData.emailContent === "string" ? emailData.emailContent.split("\n").slice(1).join("\n") : "";
 
-  console.log(bodyContent, "body content");
+  console.log(emailDataText, "emailDataText");
+
+  // Extract sections from emailDataText
+  const sections = {};
+  emailDataText?.split('\n\n').forEach(section => {
+    if (section.startsWith('**')) {
+      const [title, ...content] = section.split(':');
+      sections[title.replace(/\*\*/g, '').trim()] = content.join(':').trim();
+    }
+  });
 
   // Function to download the email template as HTML
   const downloadTemplate = () => {
     const element = document.createElement("a");
-    const file = new Blob([`<html><body>${bodyContent}</body></html>`], { type: 'text/html' });
+    const file = new Blob([emailContentHtml], { type: 'text/html' });
     element.href = URL.createObjectURL(file);
     element.download = "email_template.html";
-    document.body.appendChild(element); // Required for this to work in FireFox
+    document.body.appendChild(element);
     element.click();
   };
 
+
+  const downloadResponse = async () => {
+    const response=emailDataText;
+    const element = document.createElement("a");
+    const file = new Blob([response], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = "email_response.txt";
+    document.body.appendChild(element);
+    element.click();
+  }
   return (
-    <div className="bg-gray-100 p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
-      <div className="bg-white p-8 rounded-lg">
-        {/* Header */}
-        <header className="text-center mb-8">
-          <Image
-            src="https://www.deepbluehealth.co.nz/cdn/shop/files/DBH-Logo-Stack-Website-RGB-224x148px-v2_128x96.png?v=1671741678"
-            alt="Logo"
-            width={200}
-            height={50}
-            className="mx-auto mb-4"
-          />
-        </header>
-
-        {/* Subject Line */}
-        <h1 className="text-2xl font-bold text-blue-800 mb-6 text-center">{subject}</h1>
-
-        {/* Main Content */}
-        <main className="space-y-6">
-          <div dangerouslySetInnerHTML={{ __html: bodyContent }} />
-        </main>
-
-        {/* CTA Button */}
-        <div className="text-center mt-8">
-          <a href={productUrl} style={{ display: 'inline-block', padding: '15px 25px', backgroundColor: '#007bff', color: '#fff', textDecoration: 'none', borderRadius: '5px', fontSize: '18px', marginTop: '20px' }}>
-            Try Green Lipped Mussel Today
-          </a>
-        </div>
-
-        {/* Download Button */}
-        <div className="text-center mt-4">
-          <button onClick={downloadTemplate} style={{ display: 'inline-block', padding: '15px 25px', backgroundColor: '#28a745', color: '#fff', textDecoration: 'none', borderRadius: '5px', fontSize: '18px' }}>
-            Download Email Template
-          </button>
-        </div>
-
-        {/* Footer */}
-        <footer className="mt-8 pt-4 border-t border-gray-200 text-center text-gray-500 text-sm">
-          <p>&copy; 2023 Deep Blue Health. All rights reserved.</p>
-          <p className="mt-2">
-            <a href="unsubscribe_link" className="text-blue-500 hover:underline">
-              Unsubscribe
-            </a>{" "}
-            |
-            <a href="#" className="text-blue-500 hover:underline ml-2">
-              Privacy Policy
-            </a>
-          </p>
-          <div className="mt-4 flex justify-center space-x-4">
-            <a href="#" className="text-blue-500 hover:text-blue-600">
-              Facebook
-            </a>
-            <a href="#" className="text-blue-500 hover:text-blue-600">
-              Instagram
-            </a>
-            <a href="#" className="text-blue-500 hover:text-blue-600">
-              Twitter
-            </a>
-          </div>
-        </footer>
+    <>
+      <div className="email-preview">
+        {emailContentHtml ? (
+          <div dangerouslySetInnerHTML={{ __html: emailContentHtml }} />
+        ) : (
+          <p>Loading email preview...</p>
+        )}
       </div>
-    </div>
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-12">
+        <a
+          href={productUrl}
+          className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg font-semibold text-center hover:from-blue-700 hover:to-blue-900 transition-all transform hover:scale-105"
+        >
+          {sections['10. Call-to-Action (CTAs)']?.split('\n')[0] || 'Shop Now & Save 20%'}
+        </a>
+        <button
+          onClick={downloadTemplate}
+          className="w-full sm:w-auto px-8 py-4 bg-green-600 text-white rounded-lg font-semibold text-center hover:bg-green-700 transition-all transform hover:scale-105"
+        >
+          Download Template
+        </button>
+
+        <button
+          onClick={downloadResponse}
+          className="w-full sm:w-auto px-8 py-4 bg-green-600 text-white rounded-lg font-semibold text-center hover:bg-green-700 transition-all transform hover:scale-105"
+        >
+          Download Response
+        </button>
+      </div>
+    </>
   )
 }
