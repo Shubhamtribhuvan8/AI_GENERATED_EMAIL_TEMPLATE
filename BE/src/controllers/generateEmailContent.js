@@ -24,6 +24,7 @@
 
 require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { imagenGenerateImage } = require('../services/ImagenModel');
 const fetch = require("node-fetch");
 const { Headers } = require("node-fetch");
 global.fetch = fetch;
@@ -220,4 +221,44 @@ exports.generateEmailContent = async (req, res) => {
     console.error("Error generating email content:", error);
     return res.status(500).json({ error: "Error generating content. Please try again." });
   }
+};
+
+
+exports.generateImage = async (req, res) => {
+    const { prompt, count, enhancePrompt, aspectRatio } = req.body;
+    try {
+        if (!prompt) {
+            return res.status(400).json({
+                status: false,
+                message: "Prompt is required"
+            });
+        }
+
+        const result = await imagenGenerateImage(
+            prompt,
+            count || 1,
+            enhancePrompt || false,
+            aspectRatio
+        );
+
+        if (!result || (Array.isArray(result) && !result.length)) {
+            return res.status(500).json({
+                status: false,
+                message: "Failed to generate image"
+            });
+        }
+
+        return res.status(200).json({
+            status: true,
+            data: result
+        });
+
+    } catch (error) {
+        console.error("Image generation error:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error",
+            error: error instanceof Error ? error.message : "Unknown error"
+        });
+    }
 };

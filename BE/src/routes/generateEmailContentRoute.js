@@ -7,4 +7,9 @@ router.post(
   generateEmailContentController.generateEmailContent
 );
 
+router.post(
+  "/generate-image",
+  generateEmailContentController.generateImage
+);
+
 module.exports = router;
